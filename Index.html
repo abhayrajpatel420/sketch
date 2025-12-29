@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Love</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        /* धुंधला बैकग्राउंड */
+        
+        .bg-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('original.jpg') no-repeat center center/cover;
+            filter: blur(15px) brightness(0.5);
+            z-index: -1;
+            transform: scale(1.1);
+        }
+        /* मेन कार्ड */
+        
+        .card {
+            position: relative;
+            width: 300px;
+            height: 420px;
+            background: #fff;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 0 50px rgba(255, 105, 180, 0.6);
+            border-radius: 8px;
+            transform: rotate(-3deg);
+            opacity: 0;
+            transition: all 1.5s ease;
+            z-index: 10;
+        }
+        
+        .img-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+        
+        .img-box img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* स्केच एनिमेशन (अब 15 सेकंड का है) */
+        
+        .sketch {
+            opacity: 0;
+        }
+        
+        .animate-sketch {
+            animation: magicReveal 15s ease-in-out forwards;
+        }
+        
+        @keyframes magicReveal {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .caption {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            left: 0;
+            font-size: 1.2rem;
+            color: #d63384;
+            font-weight: bold;
+        }
+        /* गिरते हुए दिल (Heart Rain) */
+        
+        .heart {
+            position: fixed;
+            top: -10vh;
+            color: #ff4d6d;
+            font-size: 1.5rem;
+            animation: fall linear forwards;
+            z-index: 5;
+            opacity: 0.8;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+        /* बटन स्क्रीन */
+        
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 0.8s;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            color: white;
+            background: transparent;
+            border: 2px solid #ff4d6d;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff4d6d;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .visible {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="music" src="song.mp3" loop></audio>
+    <div class="bg-blur"></div>
+
+    <div class="start-screen" id="startScreen">
+        <button class="btn" onclick="startMagic()">Click for Magic ❤️</button>
+    </div>
+
+    <div class="card" id="mainCard">
+        <div class="img-box">
+            <img src="original.JPG" alt="Original">
+            <img src="sketch.JPEG" alt="Sketch" class="sketch" id="sketchImg">
+        </div>
+        <div class="caption">You are Art... ✏️</div>
+    </div>
+
+    <script>
+        function startMagic() {
+            // स्क्रीन हटाओ और गाना चलाओ
+            const screen = document.getElementById('startScreen');
+            screen.style.opacity = '0';
+            setTimeout(() => {
+                screen.style.display = 'none';
+            }, 800);
+            document.getElementById('music').play();
+
+            // कार्ड दिखाओ
+            const card = document.getElementById('mainCard');
+            card.classList.add('visible');
+
+            // स्केच एनिमेशन 1 सेकंड बाद शुरू
+            setTimeout(() => {
+                document.getElementById('sketchImg').classList.add('animate-sketch');
+            }, 1000);
+
+            // दिलों की बारिश शुरू
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2 से 5 सेकंड
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(heart);
+
+            // 5 सेकंड बाद दिल को हटा दो ताकि मेमोरी न भरे
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+    </script>
+
+</body>
+
+</html>
